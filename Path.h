@@ -41,6 +41,10 @@ namespace Path {
             extension);
     }
     
+    NSURL *toURL(NSString *path) {
+        return [NSURL URLWithString:path];
+    }
+    
     NSString *addPlatform(NSString *str) {
         NSString *extension = [NSString stringWithFormat:@".%@",[str pathExtension]];
 #if TARGET_OS_OSX

@@ -9,7 +9,7 @@ namespace MTLUtils {
         return [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:format width:w height:h mipmapped:mipmapped];
     }
 
-    id<MTLBuffer> newBuffer(id<MTLDevice> device, long length, MTLResourceOptions options = MTLResourceOptionCPUCacheModeDefault) {
+    id<MTLBuffer> newBuffer(id<MTLDevice> device, long length, MTLResourceOptions options = MTLResourceCPUCacheModeDefaultCache) {
         return [device newBufferWithLength:length options:options];
     }
 

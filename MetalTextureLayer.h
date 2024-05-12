@@ -38,10 +38,10 @@ public:
     
     if(MetalBaseLayer<T>::setup()==false) return false;
     
-    this->_texcoordBuffer = [this->_device newBufferWithBytes:this->_data->texcoord length:this->_data->TEXCOORD_SIZE*sizeof(float) options:MTLResourceOptionCPUCacheModeDefault];
+    this->_texcoordBuffer = [this->_device newBufferWithBytes:this->_data->texcoord length:this->_data->TEXCOORD_SIZE*sizeof(float) options:MTLResourceCPUCacheModeDefaultCache];
     if(!this->_texcoordBuffer) return false;
     
-    this->_argumentEncoderBuffer = [this->_device newBufferWithLength:sizeof(float)*[this->_argumentEncoder encodedLength] options:MTLResourceOptionCPUCacheModeDefault];
+    this->_argumentEncoderBuffer = [this->_device newBufferWithLength:sizeof(float)*[this->_argumentEncoder encodedLength] options:MTLResourceCPUCacheModeDefaultCache];
     
     [this->_argumentEncoder setArgumentBuffer:this->_argumentEncoderBuffer offset:0];
     [this->_argumentEncoder setTexture:this->_texture atIndex:0];
@@ -68,7 +68,9 @@ public:
       [renderEncoder setDepthStencilState:this->_depthState];
     }
     
-    [renderEncoder useResource:this->_texture usage:MTLResourceUsageSample];
+    // (void)useResource:(id<MTLResource>)resource  usage:(MTLResourceUsage)usage stages:(MTLRenderStages)stages;
+    
+    [renderEncoder useResource:this->_texture usage:MTLResourceUsageRead stages:MTLRenderStageFragment];
     
     [renderEncoder setFragmentBuffer:this->_argumentEncoderBuffer offset:0 atIndex:0];
     

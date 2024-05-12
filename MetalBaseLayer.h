@@ -137,10 +137,10 @@ class MetalBaseLayer {
 
         virtual bool setup() {
                             
-            this->_verticesBuffer = [this->_device newBufferWithBytes:this->_data->vertices length:this->_data->VERTICES_SIZE*sizeof(float) options:MTLResourceOptionCPUCacheModeDefault];
+            this->_verticesBuffer = [this->_device newBufferWithBytes:this->_data->vertices length:this->_data->VERTICES_SIZE*sizeof(float) options:MTLResourceCPUCacheModeDefaultCache];
             if(!this->_verticesBuffer) return false;
             
-            this->_indicesBuffer = [this->_device newBufferWithBytes:this->_data->indices length:this->_data->INDICES_SIZE*sizeof(this->_data->INDICES_TYPE) options:MTLResourceOptionCPUCacheModeDefault];
+            this->_indicesBuffer = [this->_device newBufferWithBytes:this->_data->indices length:this->_data->INDICES_SIZE*sizeof(this->_data->INDICES_TYPE) options:MTLResourceCPUCacheModeDefaultCache];
             if(!this->_indicesBuffer) return false;
            
             return true;
@@ -208,7 +208,7 @@ class MetalBaseLayer {
             
           if(Path::extension(shader,@"metallib")) {
                 
-                id<MTLLibrary> lib= [this->_device newLibraryWithFile:Path::addPlatform(Path::get(shader,identifier)) error:&error];
+                id<MTLLibrary> lib= [this->_device newLibraryWithURL:Path::toURL(Path::addPlatform(Path::get(shader,identifier))) error:&error];
                 
                 if(lib&&error==nil) {
                     
@@ -216,7 +216,7 @@ class MetalBaseLayer {
                 }
                 else {
                     
-                    lib= [this->_device newLibraryWithFile:Path::get(shader,identifier) error:&error];
+                    lib= [this->_device newLibraryWithURL:Path::toURL(Path::get(shader,identifier)) error:&error];
                     if(lib&&error==nil) {
                         this->_library = lib;
                     }
@@ -246,13 +246,13 @@ class MetalBaseLayer {
                                 path = [bundle resourcePath];
                             }
                             
-                            id<MTLLibrary> lib= [this->_device newLibraryWithFile:Path::addPlatform([NSString stringWithFormat:@"%@/%@",path,dict[@"metallib"]]) error:&error];
+                            id<MTLLibrary> lib= [this->_device newLibraryWithURL:Path::toURL(Path::addPlatform([NSString stringWithFormat:@"%@/%@",path,dict[@"metallib"]])) error:&error];
                              if(lib&&error==nil) {
                                 this->_library = lib;
                                 err = false;
                              }
                              else {
-                                 lib= [this->_device newLibraryWithFile:[NSString stringWithFormat:@"%@/%@",path,dict[@"metallib"]] error:&error];
+                                 lib= [this->_device newLibraryWithURL:Path::toURL([NSString stringWithFormat:@"%@/%@",path,dict[@"metallib"]]) error:&error];
                                   if(lib&&error==nil) {
                                      this->_library = lib;
                                      err = false;

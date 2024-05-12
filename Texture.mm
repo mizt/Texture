@@ -10,13 +10,14 @@
 #import "MetalBaseLayer.h"
 #import "MetalTextureLayer.h"
 
+#define FPS 30
+
 class App {
   
   private:
   
     inline static const int STAGE_WIDTH = 1280;
     inline static const int STAGE_HEIGHT = 720;
-    inline static const float FPS = 30.0;
   
     dispatch_source_t _timer;
 
@@ -40,14 +41,14 @@ class App {
         }
       }
       
-      if(this->_layer->init(STAGE_WIDTH,STAGE_HEIGHT,@"nearest-macosx.metallib",nil,false)) {
+      if(this->_layer->init(STAGE_WIDTH,STAGE_HEIGHT,@"nearest.metallib",nil,false)) {
         
         this->_view = [[NSView alloc] initWithFrame:CGRectMake(0,0,STAGE_WIDTH,STAGE_HEIGHT)];
         this->_view.layer = this->_layer->layer();
         this->_win->addChild(this->_view);
       
         this->_timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER,0,0,dispatch_queue_create("ENTER_FRAME",0));
-        dispatch_source_set_timer(this->_timer,dispatch_time(0,0),(1.0/App::FPS)*1000000000,0);
+        dispatch_source_set_timer(this->_timer,dispatch_time(0,0),(1.0/(float)FPS)*1000000000,0);
         dispatch_source_set_event_handler(this->_timer,^{
         
           this->_layer->replace(this->_texture);
